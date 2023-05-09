@@ -2,25 +2,54 @@ import { type NextPage } from "next";
 import Head from "next/head";
 import { SignInButton, useUser } from "@clerk/nextjs";
 import { SignOutButton } from "@clerk/clerk-react";
-import { api } from "~/utils/api";
+import { type RouterOutputs, api } from "~/utils/api";
 import Image from "next/image";
 import { Input } from "~/components/ui/input";
+import { formatDistanceToNow } from "date-fns";
 // import { useToast } from "~/components/ui/use-toast";
 
 const CreatePostWizard = () => {
   const { user } = useUser();
+
   if (!user) return null;
   return (
     <div className="flex items-center gap-4">
-      <div className="relative h-12 w-12 ">
-        <Image
-          src={user.profileImageUrl || "/images/default-profile.png"}
-          alt={user.fullName || "Profile image"}
-          className="rounded-full"
-          fill
-        />
-      </div>
+      <Image
+        src={user.profileImageUrl || "/images/default-profile.png"}
+        alt={user.fullName || "Profile image"}
+        className="rounded-full"
+        width={48}
+        height={48}
+      />
       <Input placeholder="Type some emoji" />
+    </div>
+  );
+};
+
+type PostWithAuthor = RouterOutputs["posts"]["getAll"][number];
+const PostView = (props: PostWithAuthor) => {
+  const { post, author } = props;
+  return (
+    <div className="flex items-center gap-4 border-b p-4" key={post.id}>
+      <Image
+        src={author.profileImageUrl || "/images/default-profile.png"}
+        alt={author.username || "Profile image"}
+        className="rounded-full"
+        width={40}
+        height={40}
+      />
+      <div>
+        <div className="flex items-center gap-2 text-sm text-foreground">
+          <div>{`@${author.username}`}</div>
+          <span>·</span>
+          <div>
+            {formatDistanceToNow(new Date(post.createdAt), {
+              addSuffix: true,
+            })}
+          </div>
+        </div>
+        <span>{post.content}</span>
+      </div>
     </div>
   );
 };
@@ -64,10 +93,8 @@ const Home: NextPage = () => {
             )}
           </div>
           <div className="flex flex-col">
-            {data?.map((post) => (
-              <div className="border-b p-8" key={post.id}>
-                {post.content}
-              </div>
+            {data?.map((fullpost) => (
+              <PostView key={fullpost.post.id} {...fullpost} />
             ))}
           </div>
         </div>
