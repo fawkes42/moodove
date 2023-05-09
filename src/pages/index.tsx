@@ -68,7 +68,11 @@ const Home: NextPage = () => {
   const { data, isLoading } = api.posts.getAll.useQuery();
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="flex h-screen w-full items-center justify-center">
+        <span className="animate-pulse">Loading...</span>
+      </div>
+    );
   }
 
   if (!data) {
