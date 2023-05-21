@@ -1,11 +1,11 @@
 import { type NextPage } from "next";
 import Head from "next/head";
 import { SignInButton, useUser } from "@clerk/nextjs";
-import { SignOutButton } from "@clerk/clerk-react";
 import { type RouterOutputs, api } from "~/utils/api";
 import Image from "next/image";
 import { Input } from "~/components/ui/input";
 import { formatDistanceToNow } from "date-fns";
+import { LoadingSpinner } from "~/components/Loading";
 // import { useToast } from "~/components/ui/use-toast";
 
 const CreatePostWizard = () => {
@@ -69,9 +69,7 @@ const Home: NextPage = () => {
 
   if (isLoading) {
     return (
-      <div className="flex h-screen w-full items-center justify-center">
-        <span className="animate-pulse">Loading...</span>
-      </div>
+      <LoadingSpinner/>
     );
   }
 
@@ -91,7 +89,7 @@ const Home: NextPage = () => {
         <div className="h-full w-full border-x md:max-w-2xl">
           <div className="border-b p-4 text-white">
             {!user.isSignedIn ? (
-              <SignInButton />
+              <SignInButton/>
             ) : (
               <CreatePostWizard></CreatePostWizard>
             )}
