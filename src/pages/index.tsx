@@ -1,6 +1,6 @@
 import { type NextPage } from "next";
 import Head from "next/head";
-import { SignInButton, useUser } from "@clerk/nextjs";
+import { SignInButton, UserButton, useUser } from "@clerk/nextjs";
 import { type RouterOutputs, api } from "~/utils/api";
 import Image from "next/image";
 import { Input } from "~/components/ui/input";
@@ -14,13 +14,7 @@ const CreatePostWizard = () => {
   if (!user) return null;
   return (
     <div className="flex items-center gap-4">
-      <Image
-        src={user.profileImageUrl || "/images/default-profile.png"}
-        alt={user.fullName || "Profile image"}
-        className="rounded-full"
-        width={48}
-        height={48}
-      />
+      <UserButton />
       <Input placeholder="Type some emoji" />
     </div>
   );
@@ -35,8 +29,8 @@ const PostView = (props: PostWithAuthor) => {
         src={author.profileImageUrl || "/images/default-profile.png"}
         alt={author.username || "Profile image"}
         className="rounded-full"
-        width={40}
-        height={40}
+        width={32}
+        height={32}
       />
       <div>
         <div className="flex items-center gap-2 text-sm text-foreground">
